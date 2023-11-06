@@ -36,10 +36,12 @@ let waterCan = new Product('water-can', 'img/water-can.jpg');
 let wineGlass = new Product('wine-glass', 'img/wine-glass.jpg');
 
 // Consolidates all the functions that need to be called on page load.
-// For my sanity.
+// Sends a copy of products array into tempProducts array.
+// Disables button at the start.
 function functionCalls() {
   pushProducts();
   tempProducts = products.slice(0);
+  getID('showResults').disabled = true;
   voteFunctions();
 }
 
