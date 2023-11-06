@@ -128,7 +128,9 @@ function createImgs(array) {
     img.addEventListener('click', function() {
       x.popularity += 1;
       rounds += 1;
-      console.log(JSON.stringify(x));
+      if (rounds >= maxRounds) {
+        allowResults();
+      }
       voteFunctions();
     });
     imgArray.push(img);
@@ -145,6 +147,17 @@ function printImgs() {
   for (let x of imgArray) {
     section.append(x);
   }
+}
+
+// Adds event listener to #showResults button.
+// Changes style to give visual representation.
+function allowResults() {
+  let button = getID('showResults');
+  button.addEventListener('click', function() {
+
+  });
+  button.style.opacity = '100%';
+  button.disabled = false;
 }
 
 // getElementById shortcut
