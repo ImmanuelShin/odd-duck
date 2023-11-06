@@ -2,51 +2,137 @@
 
 // Array to hold all products
 const products = [];
+let tempProducts = [];
+let imgArray = [];
 
 // Number of Rounds
 const rounds= 25;
+
+// Number of products to display
+const displayAmount = 3;
+
+// Consolidates all the functions that need to be called on page load.
+// For my sanity.
+function functionCalls() {
+  getProducts();
+}
+
+// Consolidates all functions that need to be called upon vote click.
+function voteFunctions() {
+  const array = takeAndRemoveProducts();
+  createImgs(array);
+}
 
 // Constructor creates each product. Takes name and path as arguments.
 // Starts popularity off at 0.
 function Product(name, path) {
   this.name = name;
   this.path = path;
+  this.views = 0;
   this.popularity = 0;
 }
 
+// Creates all products and adds them to products array
+function getProducts() {
+  let bag = new Product('bag', 'img/bag.jpg');
+  let banana = new Product('banana', 'img/banana.jpg');
+  let bathroom = new Product('bathroom', 'img/bathroom.jpg');
+  let boots = new Product('boots', 'img/boots.jpg');
+  let breakfast = new Product('breakfast', 'img/breakfast.jpg');
+  let bubblegum = new Product('bubblegum', 'img/bubblegum.jpg');
+  let chair = new Product('chair', 'img/chair.jpg');
+  let cthulhu = new Product('cthulhu', 'img/cthulhu.jpg');
+  let dogDuck = new Product('dog-duck', 'img/dog-duck.jpg');
+  let dragon = new Product('dragon', 'img/dragon.jpg');
+  let pen = new Product('pen', 'img/pen.jpg');
+  let petSweep = new Product('pet-sweep', 'img/pet-sweep.jpg');
+  let scissors = new Product('scissors', 'img/scissors.jpg');
+  let shark = new Product('shark', 'img/shark.jpg');
+  let sweep = new Product('sweep', 'img/sweep.png');
+  let tauntaun = new Product('tauntaun', 'img/tauntaun.jpg');
+  let unicorn = new Product('unicorn', 'img/unicorn.jpg');
+  let waterCan = new Product('water-can', 'img/water-can.jpg');
+  let wineGlass = new Product('wine-glass', 'img/wine-glass.jpg');
 
-
-function getImages() {
-  const dir = '../img';
-
-}
-
-// Pushes product into array
-function addProduct(product) {
-  products.push(product);
+  products.push(bag);
+  products.push(banana);
+  products.push(bathroom);
+  products.push(boots);
+  products.push(breakfast);
+  products.push(bubblegum);
+  products.push(chair);
+  products.push(cthulhu);
+  products.push(dogDuck);
+  products.push(dragon);
+  products.push(pen);
+  products.push(petSweep);
+  products.push(scissors);
+  products.push(shark);
+  products.push(sweep);
+  products.push(tauntaun);
+  products.push(unicorn);
+  products.push(waterCan);
+  products.push(wineGlass);
 }
 
 // Shuffles products array.
-// Taken from Durstenfeld shuffle algorithm.
+// Taken from Fisher-Yates shuffle algorithm.
 function shuffleArray() {
-  for (let i = products.length - 1; i > 0; i--) {
+  tempProducts = products;
+  for (let i = tempProducts.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [products[i], products[j]] = [products[j], products[i]];
-}
+    [tempProducts[i], tempProducts[j]] = [tempProducts[j], tempProducts[i]];
+  }
 }
 
 // Returns an array of the first three elements of products array.
-function getThree() {
-  return products.slice(0, 2);
+function takeAndRemoveProducts() {
+  if (tempProducts.length === 0) {
+    shuffleArray();
+  } else if (tempProducts.length < displayAmount) {
+    const oldProducts = tempProducts.splice(0, (tempProducts.length - 1));
+    shuffleArray();
+    for (let i = 0; i < (displayAmount - oldProducts.length); i++) {
+      for (let x of tempProducts) {
+        if (!(oldProducts.includes(x))) {
+          const index = tempProducts.indexOf(x);
+          oldProducts.push(tempProducts.splice(index, 1));
+          break;
+        }
+      }
+    }
+    return oldProducts;
+  }
+  const productsToDisplay = tempProducts.splice(0, (displayAmount - 1));
+  return productsToDisplay;
 }
 
-// Creates three img elements from array.
-function createThree(array) {
+// Creates img elements from array.
+function createImgs(array) {
+  imgArray = [];
+  let index = 0;
   for (let x of array) {
+    x.views += 1;
     const img = cEL('img');
-    img.src = 'x.path';
+    img.src = x.path;
+    img.setAttribute('id', 'product' + index);
+    img.setAttribute('class', 'productImg');
+    img.addEventListener('click', function() {
+      x.popularity += 1;
+      // newSet();
+    });
+    imgArray.push(img);
   }
+}
 
+function printImages() {
+  const section = getID('images');
+  while (section.hasChildElements()) {
+    section.removeChild(section.lastChild);
+  }
+  for (let x of imgArray) {
+    section.append(x);
+  }
 }
 
 // getElementById shortcut
@@ -63,3 +149,7 @@ function cEL(element) {
 function qS(selector) {
   return document.querySelector(selector);
 }
+
+// Calls
+getProducts();
+
