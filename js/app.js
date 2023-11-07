@@ -1,7 +1,27 @@
 'use strict';
 
-// Array to hold all products
-const products = [];
+// Area to hold all product related arrays
+const productNames = [
+  'bag',
+  'banana',
+  'bathroom',
+  'boots',
+  'breakfast',
+  'bubblegum',
+  'chair',
+  'cthulhu',
+  'dog-duck',
+  'dragon',
+  'pen',
+  'pet-sweep',
+  'scissors',
+  'shark',
+  'sweep',
+  'tauntaun',
+  'unicorn',
+  'water-can',
+  'wine-glass'
+];
 let tempProducts = [];
 let imgArray = [];
 
@@ -14,34 +34,13 @@ let rounds = 0;
 // Number of products to display
 const displayAmount = 3;
 
-// All products. Global for ease.
-let bag = new Product('bag', 'img/bag.jpg');
-let banana = new Product('banana', 'img/banana.jpg');
-let bathroom = new Product('bathroom', 'img/bathroom.jpg');
-let boots = new Product('boots', 'img/boots.jpg');
-let breakfast = new Product('breakfast', 'img/breakfast.jpg');
-let bubblegum = new Product('bubblegum', 'img/bubblegum.jpg');
-let chair = new Product('chair', 'img/chair.jpg');
-let cthulhu = new Product('cthulhu', 'img/cthulhu.jpg');
-let dogDuck = new Product('dog-duck', 'img/dog-duck.jpg');
-let dragon = new Product('dragon', 'img/dragon.jpg');
-let pen = new Product('pen', 'img/pen.jpg');
-let petSweep = new Product('pet-sweep', 'img/pet-sweep.jpg');
-let scissors = new Product('scissors', 'img/scissors.jpg');
-let shark = new Product('shark', 'img/shark.jpg');
-let sweep = new Product('sweep', 'img/sweep.png');
-let tauntaun = new Product('tauntaun', 'img/tauntaun.jpg');
-let unicorn = new Product('unicorn', 'img/unicorn.jpg');
-let waterCan = new Product('water-can', 'img/water-can.jpg');
-let wineGlass = new Product('wine-glass', 'img/wine-glass.jpg');
-
 // Consolidates all the functions that need to be called on page load.
 // Sends a copy of products array into tempProducts array.
 // Shuffles tempArray
 // Disables button at the start.
 function functionCalls() {
   pushProducts();
-  tempProducts = products.slice(0);
+  tempProducts = Product.products.slice(0);
   shuffleArray();
   getID('showResults').disabled = true;
   voteFunctions();
@@ -63,33 +62,21 @@ function Product(name, path) {
   this.popularity = 0;
 }
 
-// Adds all products to products array.
+// Array to keep things tidy? I guess.. anyways.
+Product.products = [];
+
+// Creates and pushes all products to products array.
 function pushProducts() {
-  products.push(bag);
-  products.push(banana);
-  products.push(bathroom);
-  products.push(boots);
-  products.push(breakfast);
-  products.push(bubblegum);
-  products.push(chair);
-  products.push(cthulhu);
-  products.push(dogDuck);
-  products.push(dragon);
-  products.push(pen);
-  products.push(petSweep);
-  products.push(scissors);
-  products.push(shark);
-  products.push(sweep);
-  products.push(tauntaun);
-  products.push(unicorn);
-  products.push(waterCan);
-  products.push(wineGlass);
+  for (let x of productNames) {
+    const newProduct = new Product(x, 'img/' + x + '.jpg');
+    Product.products.push(newProduct);
+  }
 }
 
 // Shuffles products array.
 // Taken from Fisher-Yates shuffle algorithm.
 function shuffleArray() {
-  tempProducts = products.slice(0);
+  tempProducts = Product.products.slice(0);
   for (let i = tempProducts.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [tempProducts[i], tempProducts[j]] = [tempProducts[j], tempProducts[i]];
@@ -164,7 +151,7 @@ function allowResults() {
 
 function showResults() {
   let ul = getID('resultList');
-  for (let x of products) {
+  for (let x of Product.products) {
     let li = cEL('li');
     li.textContent = x.name + ': ' + x.popularity;
     ul.appendChild(li);
