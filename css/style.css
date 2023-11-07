@@ -34,6 +34,7 @@ main {
 
 #vote {
     width: 90%;
+    height: 100%;
     margin: auto;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -50,7 +51,9 @@ main {
 }
 
 #images .productImg {
-    width: 25vw;
+    max-width: 33%;
+    max-height: 50%;
+    width: auto;
     height: auto;
 }
 
