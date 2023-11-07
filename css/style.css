@@ -1,0 +1,71 @@
+html {
+    overflow-y: auto;
+}
+
+header {
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    background-color: black;
+}
+
+@media (max-height: 400px) {
+    header, footer {
+        min-height: 50px;
+    }
+    main {
+        min-height: 330px;
+    }
+}
+
+@media (min-height: 1000px) {
+    header, footer {
+        max-height: 100px;
+    }
+    main {
+        min-height: calc(100vh - 200px);
+    }
+}
+
+main {
+    width: 100%;
+    height: 80vh;
+}
+
+#vote {
+    width: 90%;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+#vote #images {
+    grid-area: 1 / 2 / 4 / 5;
+    display: flex;
+    justify-content: center;
+
+}
+
+#images .productImg {
+    width: 25vw;
+    height: auto;
+}
+
+#vote #results {
+    grid-area: 1 / 1 / 6 / 2;
+}
+
+#vote #description {
+    grid-area: 4 / 2 / 6 / 5;
+}
+
+footer {
+    width: 100%;
+    height: 10vh;
+    text-align: center;
+    line-height: 10vh;
+    background-color: black;
+}
