@@ -37,10 +37,12 @@ let wineGlass = new Product('wine-glass', 'img/wine-glass.jpg');
 
 // Consolidates all the functions that need to be called on page load.
 // Sends a copy of products array into tempProducts array.
+// Shuffles tempArray
 // Disables button at the start.
 function functionCalls() {
   pushProducts();
   tempProducts = products.slice(0);
+  shuffleArray();
   getID('showResults').disabled = true;
   voteFunctions();
 }
@@ -155,11 +157,18 @@ function printImgs() {
 // Changes style to give visual representation.
 function allowResults() {
   let button = getID('showResults');
-  button.addEventListener('click', function() {
-
-  });
+  button.addEventListener('click', showResults);
   button.style.opacity = '100%';
   button.disabled = false;
+}
+
+function showResults() {
+  let ul = getID('resultList');
+  for (let x of products) {
+    let li = cEL('li');
+    li.textContent = x.name + ': ' + x.popularity;
+    ul.appendChild(li);
+  }
 }
 
 // getElementById shortcut
