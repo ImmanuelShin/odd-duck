@@ -201,6 +201,7 @@ function clone() {
   }
 }
 
+// Sets products array to 0 and pushes all updated products back into array.
 function getAndUpdateProducts() {
   Product.products.length = 0;
   const json = parseJSON(localStorage.getItem(productKey));
@@ -211,10 +212,12 @@ function getAndUpdateProducts() {
   }
 }
 
+// Stores objects into local storage. Accepts string and object
 function store(key, object) {
   localStorage.setItem(key, JSON.stringify(object));
 }
 
+// Parses JSON strings
 function parseJSON(json) {
   return JSON.parse(json);
 }
