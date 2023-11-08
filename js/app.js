@@ -65,7 +65,7 @@ function Product(name, path) {
 // Array to keep things tidy? I guess.. anyways.
 Product.products = [];
 
-// Creates and pushes all products to products array.
+// Creates and pushes all products and information to products array.
 function pushProducts() {
   for (let x of productNames) {
     const newProduct = new Product(x, 'img/' + x + '.jpg');
@@ -119,14 +119,18 @@ function createImgs(array) {
     img.addEventListener('click', function() {
       x.popularity += 1;
       rounds += 1;
-      if (rounds >= maxRounds) {
+      if (rounds === maxRounds) {
         allowResults();
+        clone();
+      } else {
+        voteFunctions();
       }
-      voteFunctions();
     });
     imgArray.push(img);
+    index++;
   }
 }
+
 
 // Clears #images section of all product children
 // Appends new product children
@@ -149,6 +153,7 @@ function allowResults() {
   button.disabled = false;
 }
 
+// Prints results upon button press
 function showResults() {
   let ul = getID('resultList');
   for (let x of Product.products) {
@@ -156,7 +161,123 @@ function showResults() {
     li.textContent = x.name + ': ' + x.popularity;
     ul.appendChild(li);
   }
+  createBarChart();
+  createPieChart();
 }
+
+// Returns array of all .view values in products
+function getViews() {
+  const views = [];
+  for (let x of Product.products) {
+    views.push(x.views);
+  }
+  return views;
+}
+
+// Returns array of all .popularity values in products
+function getPops() {
+  const popularity = [];
+  for (let x of Product.products) {
+    popularity.push(x.popularity);
+  }
+  return popularity;
+}
+
+// Clones children to make my life easier
+// Acts as removeEventListener()
+function clone() {
+  const imgs = qSA('.productImg');
+  for (let x of imgs) {
+    const copy = x.cloneNode(true);
+    x.parentNode.replaceChild(copy, x);
+  }
+}
+
+/*
+--------------------------------------Chart----------------------------------------------------
+*/
+
+// Creates bar chart using chart.js
+// Takes views and popularity as datasets.
+// Appends chart to #c1 canvas
+function createBarChart() {
+  const barCanvas = getID('c1').getContext('2d');
+
+  const viewBarData = {
+    label: 'Product Views',
+    data: getViews(),
+    backgroundColor: 'rgba(99, 132, 0, 0.6)',
+  };
+
+  const popBarData = {
+    label: 'Product Popularity',
+    data: getPops(),
+    backgroundColor: 'rgba(0, 99, 132, 0.6)',
+  };
+
+  const barData = {
+    labels: productNames,
+    datasets: [viewBarData, popBarData]
+  };
+
+  const barOptions = {
+    scales: {
+      x: {
+        barPercentage: 1,
+        categoryPercentage: 0.6
+      },
+      y: {
+        beginAtZero: true,
+        min: 0,
+        max: 8
+      }
+    },
+    responsive: true
+  };
+
+  const config = {
+    type: 'bar',
+    data: barData,
+    options: barOptions
+  };
+
+  const barChart = new Chart(barCanvas, config);
+}
+
+// Creates pie chart.
+// Takes popularity as dataset.
+// Appends chart to #c2 canvas
+function createPieChart() {
+  const pieCanvas = getID('c2');
+
+  const popPieData = {
+    labels: productNames,
+    datasets: [{
+      label: 'Product Popularity',
+      data: getPops(),
+      backgroundColor: [
+        '#fae8eb', '#f6caca', '#e4c2c6', '#cd9fcc', '#0a014f',
+        '#bee6ce', '#bcffdb', '#8dffcd', '#68d89b', '#4f9d69',
+        '#cdf7f6', '#8fb8de', '#9a94bc', '#9b5094', '#6a605c',
+        '#28536b', '#c2948a', '#7ea8be', '#f6f0ed', '#bbb193'
+      ]
+    }]
+  };
+
+  const config = {
+    type: 'pie',
+    data: popPieData,
+    options: {
+      responsive: true
+    }
+  };
+
+  const pieChart = new Chart(pieCanvas, config);
+}
+
+/*
+--------------------------------------Shortcut Functions----------------------------------------------------
+*/
 
 // getElementById shortcut
 function getID(id) {
@@ -169,10 +290,13 @@ function cEL(element) {
 }
 
 // querySelector shortcut
-function qS(selector) {
-  return document.querySelector(selector);
+function qSA(selector) {
+  return document.querySelectorAll(selector);
 }
 
-// Calls
+/*
+--------------------------------------Function Calls----------------------------------------------------
+*/
+
 functionCalls();
 
