@@ -123,6 +123,7 @@ function createImgs(array) {
     const img = cEL('img');
     img.src = x.path;
     img.setAttribute('id', 'product' + index);
+    img.setAttribute('alt', 'An image representation of a ' + x.name);
     img.setAttribute('class', 'productImg');
     img.addEventListener('click', function() {
       x.popularity += 1;
@@ -164,9 +165,24 @@ function allowResults() {
 // Prints results upon button press
 function showResults() {
   let ul = getID('resultList');
+  if (ul.firstChild) {
+    while (ul.firstChild) {
+      ul.removeChild(ul.lastChild);
+    }
+  }
   for (let x of Product.products) {
-    let li = cEL('li');
-    li.textContent = x.name + ': ' + x.popularity;
+    const li = cEL('li');
+    li.setAttribute('class', 'listItem');
+    const pName = cEL('p');
+    pName.setAttribute('class', 'listName');
+    const pValue = cEL('p');
+    pValue.setAttribute('class', 'listValue');
+
+    pName.textContent = (x.name).toUpperCase();
+    pValue.textContent = 'Views: ' + x.views + ' | ' + x.popularity + ' :Popularity';
+
+    li.appendChild(pName);
+    li.appendChild(pValue);
     ul.appendChild(li);
   }
   createBarChart();
@@ -262,7 +278,8 @@ function createBarChart() {
         max: (Math.ceil((Product.products[0].views + 1)/10)*10)
       }
     },
-    responsive: true
+    responsive: true,
+    maintainAspectRatio: true
   };
 
   const config = {
@@ -298,7 +315,8 @@ function createPieChart() {
     type: 'pie',
     data: popPieData,
     options: {
-      responsive: true
+      responsive: true,
+      maintainAspectRatio: true
     }
   };
 
