@@ -63,6 +63,7 @@ main {
     border-radius: 1vh;
     box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
     border: thin solid #545861;
+    padding: 1em;
 }
 
 #vote #images {
@@ -79,18 +80,30 @@ main {
 
 #vote #results {
     grid-area: 2 / 2 / 7 / 4;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #results #resultsDisplay {
     display: flex;
     justify-content: center;
+    overflow: hidden;
 }
 
-#results ul {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    flex-wrap: wrap;
+#results #resultList {
+    columns: 2;
+    font-size: small;
+    overflow: scroll;
+}
+
+#resultList .listItem {
+    margin: 0.5em 0 0.5em 0;
+    page-break-inside: avoid;
+}
+.listItem .listName {
+    text-align: center;
 }
 
 #vote #description {
