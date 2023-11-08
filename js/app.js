@@ -131,7 +131,6 @@ function createImgs(array) {
   }
 }
 
-
 // Clears #images section of all product children
 // Appends new product children
 function printImgs() {
@@ -191,6 +190,23 @@ function clone() {
     const copy = x.cloneNode(true);
     x.parentNode.replaceChild(copy, x);
   }
+}
+
+function getAndUpdateProducts() {
+  Product.products.length = 0;
+  const json = parseJSON(localStorage.get('products'));
+  for (let x of json) {
+    const product = new Product(x.name, x.path, x.views, x.pop);
+    Product.products.push(product);
+  }
+}
+
+function storeProducts() {
+  localStorage.set('products', JSON.stringify(Product.products));
+}
+
+function parseJSON(json) {
+  return JSON.parse(json);
 }
 
 /*
