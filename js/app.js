@@ -34,6 +34,10 @@ let rounds = 0;
 // Number of products to display
 const displayAmount = 3;
 
+// Key area
+// LocalStorage products key
+const productKey = 'products';
+
 // Consolidates all the functions that need to be called on page load.
 // Sends a copy of products array into tempProducts array.
 // Shuffles tempArray
@@ -55,11 +59,11 @@ function voteFunctions() {
 
 // Constructor creates each product. Takes name and path as arguments.
 // Starts popularity off at 0.
-function Product(name, path) {
+function Product(name, path, views, popularity) {
   this.name = name;
   this.path = path;
-  this.views = 0;
-  this.popularity = 0;
+  this.views = views;
+  this.popularity = popularity;
 }
 
 // Array to keep things tidy? I guess.. anyways.
@@ -67,9 +71,13 @@ Product.products = [];
 
 // Creates and pushes all products and information to products array.
 function pushProducts() {
-  for (let x of productNames) {
-    const newProduct = new Product(x, 'img/' + x + '.jpg');
-    Product.products.push(newProduct);
+  if (localStorage.getItem(productKey)){
+    getAndUpdateProducts();
+  } else {
+    for (let x of productNames) {
+      const newProduct = new Product(x, 'img/' + x + '.jpg', 0, 0);
+      Product.products.push(newProduct);
+    }
   }
 }
 
@@ -115,10 +123,12 @@ function createImgs(array) {
     const img = cEL('img');
     img.src = x.path;
     img.setAttribute('id', 'product' + index);
+    img.setAttribute('alt', 'An image representation of a ' + x.name);
     img.setAttribute('class', 'productImg');
     img.addEventListener('click', function() {
       x.popularity += 1;
       rounds += 1;
+      store(productKey, Product.products);
       if (rounds === maxRounds) {
         allowResults();
         clone();
@@ -130,7 +140,6 @@ function createImgs(array) {
     index++;
   }
 }
-
 
 // Clears #images section of all product children
 // Appends new product children
@@ -156,9 +165,24 @@ function allowResults() {
 // Prints results upon button press
 function showResults() {
   let ul = getID('resultList');
+  if (ul.firstChild) {
+    while (ul.firstChild) {
+      ul.removeChild(ul.lastChild);
+    }
+  }
   for (let x of Product.products) {
-    let li = cEL('li');
-    li.textContent = x.name + ': ' + x.popularity;
+    const li = cEL('li');
+    li.setAttribute('class', 'listItem');
+    const pName = cEL('p');
+    pName.setAttribute('class', 'listName');
+    const pValue = cEL('p');
+    pValue.setAttribute('class', 'listValue');
+
+    pName.textContent = (x.name).toUpperCase();
+    pValue.textContent = 'Views: ' + x.views + ' | ' + x.popularity + ' :Popularity';
+
+    li.appendChild(pName);
+    li.appendChild(pValue);
     ul.appendChild(li);
   }
   createBarChart();
@@ -191,6 +215,27 @@ function clone() {
     const copy = x.cloneNode(true);
     x.parentNode.replaceChild(copy, x);
   }
+}
+
+// Sets products array to 0 and pushes all updated products back into array.
+function getAndUpdateProducts() {
+  Product.products.length = 0;
+  const json = parseJSON(localStorage.getItem(productKey));
+  for (let x of json) {
+    console.log(x.name + x.path + x.views + ' ' + x.pop);
+    const product = new Product(x.name, x.path, x.views, x.popularity);
+    Product.products.push(product);
+  }
+}
+
+// Stores objects into local storage. Accepts string and object
+function store(key, object) {
+  localStorage.setItem(key, JSON.stringify(object));
+}
+
+// Parses JSON strings
+function parseJSON(json) {
+  return JSON.parse(json);
 }
 
 /*
@@ -229,10 +274,12 @@ function createBarChart() {
       y: {
         beginAtZero: true,
         min: 0,
-        max: 8
+        // Takes number of views and rounds it to the next greatest multiple of ten
+        max: (Math.ceil((Product.products[0].views + 1)/10)*10)
       }
     },
-    responsive: true
+    responsive: true,
+    maintainAspectRatio: true
   };
 
   const config = {
@@ -268,7 +315,8 @@ function createPieChart() {
     type: 'pie',
     data: popPieData,
     options: {
-      responsive: true
+      responsive: true,
+      maintainAspectRatio: true
     }
   };
 

@@ -1,48 +1,69 @@
 html {
-    height: 100vh;
-    overflow: auto;
+    height: 100%;
+    width: 100%;
+}
+body {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
 }
 
 header {
     width: 100%;
-    height: 10vh;
+    height: 40px;
+    grid-area: 1 / 1 / 2 / 2;
     display: flex;
-    background-color: black;
 }
 
-@media (max-height: 400px) {
+header, footer {
+    background-image: linear-gradient(to right, #84dccf, #7bd5d6, #79cedb, #7cc6dd, #84bddc);
+}
+
+/* @media (max-height: 400px) {
     header, footer {
         min-height: 50px;
-    }
-    main {
-        min-height: 330px;
+        line-height: 50px;
     }
 }
 
-@media (min-height: 1000px) {
+@media (min-height: 1080px) {
     header, footer {
         max-height: 100px;
+        line-height: 100px;
     }
     main {
-        min-height: calc(100vh - 200px);
+        height: calc(100vh - 200px);
     }
-}
+}  */
 
 main {
     width: 100%;
-    height: 80vh;
+    grid-area: 2 / 1 / 3 / 2;
+    height: 100%;
     overflow-y: auto;
+    background-image: linear-gradient(to right bottom, #4e5362, #3d4651, #303a40, #252d30, #1b2021);
+
 }
 
 #vote {
     width: 90%;
-    height: 100%;
-    margin: auto;
+    height: 100vh;
+    margin: 0 auto 0 auto;
     display: grid;
     grid-template-columns: repeat(11, 1fr);
-    grid-template-rows: repeat(10, 1fr);
+    grid-template-rows: repeat(7, 1fr) 3fr 1fr;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
+}
+
+#vote > section {
+    background-color: #bac1d3;
+    border-radius: 1vh;
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    border: thin solid #545861;
+    padding: 1em;
 }
 
 #vote #images {
@@ -53,38 +74,73 @@ main {
 }
 
 #images .productImg {
-    max-width: 33%;
-    max-height: 50%;
-    width: auto;
-    height: auto;
+    width: 33%;
+    aspect-ratio: 1 / 1;
 }
 
 #vote #results {
     grid-area: 2 / 2 / 7 / 4;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#results #resultsDisplay {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+#results #resultList {
+    columns: 2;
+    font-size: small;
+    overflow: scroll;
+}
+
+#resultList .listItem {
+    margin: 0.5em 0 0.5em 0;
+    page-break-inside: avoid;
+}
+.listItem .listName {
+    text-align: center;
 }
 
 #vote #description {
     grid-area: 6 / 5 / 7 / 11;
 }
 
-#charts {
-    grid-area: 8 / 2 / 11 / 11;
+#vote #charts {
+    grid-area: 8 / 2 / 9 / 11;
     display: flex;
     justify-content: space-between;
+    height: fit-content;
 }
 
 .chartContainer {
     position: relative;
-    height: 100%;
+    display: flex;
+    justify-content: center;
+    height: fit-content;
     width: 50%;
-    overflow: auto;
+    margin: auto;
 }
 
 
+
+#c1 {
+    width: 35vw !important;
+}
+
+#c2 {
+    width: auto !important;
+    height: 3fr !important;
+}
+
 footer {
     width: 100%;
-    height: 10vh;
+    height: 40px;
+    grid-area: 3 / 1 / 4 / 2;
     text-align: center;
-    line-height: 10vh;
-    background-color: black;
+    line-height: 40px;
 }
